@@ -1,5 +1,5 @@
 {
-  "name": "ts-test-course",
+  "name": "ts-test-http",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,17 +7,9 @@
     "test": "jest",
     "start": "ts-node src/app/Launcher.ts"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/barosanuemailtest/TSTestCourse.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/barosanuemailtest/TSTestCourse/issues"
-  },
-  "homepage": "https://github.com/barosanuemailtest/TSTestCourse#readme",
   "devDependencies": {
     "@types/jest": "^26.0.8",
     "@types/node": "^14.0.27",
