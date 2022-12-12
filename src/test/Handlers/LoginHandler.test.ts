@@ -17,7 +17,8 @@ describe("LoginHandler test suite", () => {
 
   const responseMock = {
     writeHead: jest.fn(), // cria uma função simulada
-    write: jest.fn()
+    write: jest.fn(),
+    statusCode: 0
   }
 
   const authorizerMock = {
@@ -62,7 +63,7 @@ describe("LoginHandler test suite", () => {
     expect(responseMock.writeHead).not.toHaveBeenCalled()
   })
 
-  test.only("post request with valid login", async () => {
+  test("post request with valid login", async () => {
     requestMock.method = HTTP_METHODS.POST
 
     getRequestBody.mockReturnValueOnce({
@@ -72,7 +73,37 @@ describe("LoginHandler test suite", () => {
 
     authorizerMock.generateToken.mockReturnValueOnce(someSessionToken) // retorna um valor mocado quando a função for chamada
     await loginHandler.handleRequest()
+    expect(responseMock.statusCode).toBe(HTTP_CODES.CREATED)
+    expect(responseMock.writeHead).toBeCalledWith(HTTP_CODES.CREATED, {
+      "Content-Type": "application/json"
+    })
+    expect(responseMock.write).toBeCalledWith(JSON.stringify(someSessionToken))
 
     // mockReturnValueOnce permite encadeamento de chamadas
+  })
+
+  test("post request invalid login", async () => {
+    requestMock.method = HTTP_METHODS.POST
+
+    getRequestBody.mockReturnValueOnce({
+      username: "tainhaplay",
+      passwrod: "abc@123"
+    })
+
+    authorizerMock.generateToken.mockReturnValueOnce(null)
+    await loginHandler.handleRequest()
+    expect(responseMock.statusCode).toBe(HTTP_CODES.NOT_fOUND)
+    expect(responseMock.write).toBeCalledWith("wrong username or password")
+  })
+
+  test.only("post request with unexpected error", async () => {
+    requestMock.method = HTTP_METHODS.POST
+
+    getRequestBody.mockRejectedValueOnce(new Error("something went wrong!")) // returna um mock rejeitado
+    await loginHandler.handleRequest()
+    expect(responseMock.statusCode).toBe(HTTP_CODES.INTERNAL_SERVER_ERROR)
+    expect(responseMock.write).toBeCalledWith(
+      "Internal error: something went wrong!"
+    )
   })
 })
