@@ -96,7 +96,7 @@ describe("LoginHandler test suite", () => {
     expect(responseMock.write).toBeCalledWith("wrong username or password")
   })
 
-  test.only("post request with unexpected error", async () => {
+  test("post request with unexpected error", async () => {
     requestMock.method = HTTP_METHODS.POST
 
     getRequestBody.mockRejectedValueOnce(new Error("something went wrong!")) // returna um mock rejeitado
